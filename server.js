@@ -66,6 +66,32 @@ app.get('/users/:id', (req, res) => {
   res.status(200).json(user);
 });
 
+let balance = 0;
+app.post('/deposit', (req, res) => {
+  const  amount  = parseInt(req.query.amount);
+  if (!amount || isNaN(amount) || amount <= 0) {
+    return res.status(400).json({ message: 'Invalid amount for deposit' });
+  }
+
+  balance += amount;
+  res.status(200).json({ message: 'Deposit successful', balance });
+});
+app.post('/withdraw', (req, res) => {
+  const  amount  = parseInt(req.query.amount);
+  if (!amount || isNaN(amount) || amount <= 0) {
+    return res.status(400).json({ message: 'Invalid amount for withdraw' });
+  }
+
+  if (amount > balance) {
+    return res.status(400).json({ message: 'Insufficient balance' });
+  }
+
+  balance -= amount;
+  res.status(200).json({ message: 'Withdrawal successful', balance });
+});
+app.get('/balance', (req, res) => {
+  res.status(200).json({ balance });
+});
 // Start the server
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
