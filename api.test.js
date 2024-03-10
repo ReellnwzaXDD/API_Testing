@@ -49,12 +49,20 @@ app.post('/register', (req, res) => {
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
+  // Check if username or password is missing
+  if (!username) {
+    return res.status(400).json({ message: 'Username is required' });
+  }
+  if (!password) {
+    return res.status(400).json({ message: 'Password is required' });
+  }
   const user = users.find(user => user.username === username && user.password === password);
   if (!user) {
     return res.status(401).json({ message: 'Invalid username or password' });
   }
   res.status(200).json({ message: 'Login successful' });
 });
+
   
 
 app.get('/users', (req, res) => {
@@ -144,6 +152,31 @@ describe('Authentication Operation', () => {
       expect(error.response.data.message).toBe('Invalid username or password');
     }
     
+  });
+  test('Login with missing password', async () => {
+    const testUser = {
+      username: 'user1',
+      password: ''
+    };
+    try {
+      await axios.post(`${BASE_URL}/login`, testUser);
+    } catch (error) {
+      expect(error.response.status).toBe(400); // Assuming 400 is the appropriate status code for missing password
+      expect(error.response.data.message).toBe('Password is required');
+    }
+  });
+  
+  test('Login with missing username', async () => {
+    const testUser = {
+      username: '',
+      password: 'password1'
+    };
+    try {
+      await axios.post(`${BASE_URL}/login`, testUser);
+    } catch (error) {
+      expect(error.response.status).toBe(400); // Assuming 400 is the appropriate status code for missing username
+      expect(error.response.data.message).toBe('Username is required');
+    }
   });
   test('Registering a new user with valid credentials should succeed', async () => {
     const newUser = {
