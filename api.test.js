@@ -143,7 +143,82 @@ describe('Authentication Operation', () => {
       expect(error.response.status).toBe(401);
       expect(error.response.data.message).toBe('Invalid username or password');
     }
+    
+  });
+  test('Registering a new user with valid credentials should succeed', async () => {
+    const newUser = {
+      username: 'newuser',
+      password: 'newpassword'
+    };
+    const response = await axios.post(`${BASE_URL}/register`, newUser);
+    expect(response.status).toBe(201);
+    expect(response.data.message).toBe('User registered successfully');
+  });
 
+  test('Registering with missing username should fail', async () => {
+    const userWithMissingUsername = {
+      username: '',
+      password: 'newpassword'
+    };
+
+    try {
+      await axios.post(`${BASE_URL}/register`, userWithMissingUsername);
+    } catch (error) {
+      expect(error.response.status).toBe(400);
+      expect(error.response.data.message).toBe('Username and password are required');
+    }
+  });
+
+  test('Registering with missing password should fail', async () => {
+    const userWithMissingPassword = {
+      username: 'newuser',
+      password: ''
+    };
+    try {
+      await axios.post(`${BASE_URL}/register`, userWithMissingPassword);
+    } catch (error) {
+      expect(error.response.status).toBe(400);
+      expect(error.response.data.message).toBe('Username and password are required');
+    }
+  });
+
+  test('Registering with an existing username should fail', async () => {
+    const existingUser = {
+      username: 'admin',
+      password: 'admin'
+    };
+    try {
+      await axios.post(`${BASE_URL}/register`, existingUser);
+    } catch (error) {
+      expect(error.response.status).toBe(400);
+      expect(error.response.data.message).toBe('Username already exists');
+    }
+  });
+
+  test('Registering with a short username should fail', async () => {
+    const userWithShortUsername = {
+      username: 'short',
+      password: 'newpassword'
+    };    
+    try {
+      await axios.post(`${BASE_URL}/register`, userWithShortUsername);
+    } catch (error) {
+      expect(error.response.status).toBe(400);
+      expect(error.response.data.message).toBe('Username should be at least 6 characters long');
+    }
+  });
+
+  test('Registering with a short password should fail', async () => {
+    const userWithShortPassword = {
+      username: 'newuser2',
+      password: 'short'
+    };
+    try {
+      await axios.post(`${BASE_URL}/register`, userWithShortPassword);
+    } catch (error) {
+      expect(error.response.status).toBe(400);
+      expect(error.response.data.message).toBe('Password should be at least 6 characters long');
+    }
   });
 });
 // For Bank Testcase
