@@ -11,13 +11,14 @@ const BASE_URL = `http://localhost:${port}`;
 let balance = 0;
 
 
-let users=[
-  {id:1, username: 'admin', password: 'admin'},
-  {id:2, username: 'user1', password: 'password1'},
-  {id:3, username: 'user2', password: 'password2'},
-  {id:4, username: 'user3', password: 'password3'},
-  {id:5, username: 'user4', password: 'password4'},
-]
+let users = [
+  { id: 1, username: 'administrator', password: 'adminadmin' },
+  { id: 2, username: 'user123', password: 'password123' },
+  { id: 3, username: 'superuser', password: 'superpassword' },
+  { id: 4, username: 'testaccount', password: 'test123456' },
+  { id: 5, username: 'securityguard', password: 'guardian123' }
+];
+
 app.use(bodyParser.json());
 //*************************************************Authentication*************************************************************** */
 app.post('/register', (req, res) => {
