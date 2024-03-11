@@ -133,8 +133,8 @@ describe('Authentication Operation', () => {
  
   test('Login with valid user',async()=>{
     const testusr = {
-      username: 'user1',
-      password: 'password1'
+      username: 'administrator',
+      password: 'adminadmin'
     }
     const response = await axios.post(`${BASE_URL}/login`,testusr);
     expect(response.status).toBe(200);
@@ -218,8 +218,8 @@ describe('Authentication Operation', () => {
 
   test('Registering with an existing username should fail', async () => {
     const existingUser = {
-      username: 'admin',
-      password: 'admin'
+      username: 'administrator',
+      password: 'administrator'
     };
     try {
       await axios.post(`${BASE_URL}/register`, existingUser);
